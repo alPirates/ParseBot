@@ -16,6 +16,7 @@ type UiService struct {
 	Layout2        []*ui.Row
 	ConfigCommands *ui.List
 	Config         *ui.List
+	ConfigStatus   *ui.Par
 }
 
 func NewUiService() UiService {
@@ -72,6 +73,8 @@ func NewUiService() UiService {
 
 	configCommands := ui.NewList()
 	commandsList := []string{
+		"[r] [Обновить конфигурацию](fg-red)",
+		"---------------------",
 		"[1] [Главная панель](fg-green)",
 		"[2] [Конфигурация](fg-yellow)",
 	}
@@ -94,6 +97,12 @@ func NewUiService() UiService {
 	config.Width = 25
 	config.Y = 0
 
+	configStatus := ui.NewPar("[Конфигурация прочитана успешно](fg-green)")
+	configStatus.Height = 3
+	configStatus.Width = 37
+	configStatus.Y = 4
+	configStatus.BorderFg = ui.ColorGreen
+
 	return UiService{
 		Tabpane:        tabpane,
 		Commands:       listCommands,
@@ -101,6 +110,7 @@ func NewUiService() UiService {
 		Logs:           lg,
 		ConfigCommands: configCommands,
 		Config:         config,
+		ConfigStatus:   configStatus,
 	}
 }
 
@@ -127,6 +137,9 @@ func (u UiService) Init() {
 		),
 		ui.NewRow(
 			ui.NewCol(12, 0, u.Config),
+		),
+		ui.NewRow(
+			ui.NewCol(12, 0, u.ConfigStatus),
 		),
 	}
 
@@ -161,9 +174,13 @@ func (u UiService) CheckKeys() {
 		ui.StopLoop()
 	})
 	ui.Handle("u", func(ui.Event) {
-		ui.StopLoop()
+		// обновление состояния
+	})
+	ui.Handle("r", func(ui.Event) {
+		// обновление конфигурации
 	})
 	ui.Handle("t", func(ui.Event) {
+		// тестовое  письмо
 		if len(u.Logs.Items) == 7 {
 			u.Logs.Items = u.Logs.Items[1:]
 		}
