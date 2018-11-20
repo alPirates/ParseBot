@@ -8,5 +8,4 @@ go get -u github.com/gizak/termui
 
 build for production
 ```
-bash build.sh
 ```bash
